@@ -13,12 +13,25 @@ export const ProductDetailsScreen = () => {
       .then((response) => {
         response.price = currencyFormat(response.price);
         setProduct(response);
+        addProductToHisotry(response);
       });
   }, [productId]);
 
   const currencyFormat = (num) => {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
   };
+
+  const addProductToHisotry = (product) => {
+    const history = window.localStorage.getItem('productsHistory');
+
+    if (history) {
+      const productsHistory = JSON.parse(history);
+      productsHistory.unshift(product);
+      window.localStorage.setItem('productsHistory', JSON.stringify(productsHistory));
+    } else {
+      window.localStorage.setItem('productsHistory', JSON.stringify([product]));
+    }
+  }
 
   return (
     <div className="container mt-5">
